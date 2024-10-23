@@ -3,11 +3,7 @@ from flask import (Flask, render_template, make_response, url_for, request,
 from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
-# one or the other of these. Defaults to MySQL (PyMySQL)
-# change comment characters to switch to SQLite
-
 import cs304dbi as dbi
-# import cs304dbi_sqlite3 as dbi
 
 import secrets
 
@@ -22,48 +18,6 @@ app.config['TRAP_BAD_REQUEST_ERRORS'] = True
 def index():
     return render_template('main.html',
                            page_title='Main Page')
-
-# You will probably not need the routes below, but they are here
-# just in case. Please delete them if you are not using them
-
-@app.route('/greet/', methods=["GET", "POST"])
-def greet():
-    if request.method == 'GET':
-        return render_template('greet.html',
-                               page_title='Form to collect username')
-    else:
-        try:
-            username = request.form['username'] # throws error if there's trouble
-            flash('form submission successful')
-            return render_template('greet.html',
-                                   page_title='Welcome '+username,
-                                   name=username)
-
-        except Exception as err:
-            flash('form submission error'+str(err))
-            return redirect( url_for('index') )
-
-# This route displays all the data from the submitted form onto the rendered page
-
-@app.route('/formecho/', methods=['GET','POST'])
-def formecho():
-    if request.method == 'GET':
-        return render_template('form_data.html',
-                               page_title='Display of Form Data',
-                               method=request.method,
-                               form_data=request.args)
-    elif request.method == 'POST':
-        return render_template('form_data.html',
-                               page_title='Display of Form Data',
-                               method=request.method,
-                               form_data=request.form)
-    else:
-        raise Exception('this cannot happen')
-
-@app.route('/testform/')
-def testform():
-    # these forms go to the formecho route
-    return render_template('testform.html')
 
 
 if __name__ == '__main__':
